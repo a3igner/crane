@@ -1,0 +1,187 @@
+% ============================================================
+% Section 4: Technical Approach
+% ============================================================
+\section{Technical Approach}
+\label{sec:approach}
+
+\subsection{Signal 1: Financial Lexicon Scorer}
+
+The first signal is a lightweight domain-adapted financial lexicon scorer inspired by the Loughran-McDonald methodology~\cite{loughran2011liability} but updated for 2020s-era financial news. The lexicon contains approximately 400 entries organized into four polarity categories:
+
+\begin{itemize}
+    \item \textbf{Positive (97 terms)}: \texttt{beat, surge, rally, bullish, upgrade, outperform, growth, profit, rebound, recovery, momentum, approval, partnership, buyback, dividend, launch, acquisition, merger, synergy, guidance, outlook, resilient, stimulus, infrastructure, rate cut, easing, oversold, bargain, undervalued}
+    \item \textbf{Negative (122 terms)}: \texttt{miss, decline, drop, plunge, crash, slump, downgrade, bearish, loss, debt, default, bankruptcy, layoff, inflation, recession, tariff, trade war, selloff, correction, panic, crisis, rate hike, tightening, overvalued, bubble, fraud, scandal, investigation, lawsuit, volatility, uncertainty, shutdown, deficit, austerity}
+    \item \textbf{Uncertainty (12 terms)}: \texttt{uncertain, unclear, ambiguous, pending, potential, possibly, speculative, forecast, projection, estimate, analysis, may}
+    \item \textbf{Litigious (8 terms)}: \texttt{lawsuit, litigation, settlement, allege, claim, complaint, arbitration, class action}
+\end{itemize}
+
+The scorer additionally checks bigrams (e.g., \texttt{rate cut}, \texttt{trade war}) and applies a prospect-theory loss aversion multiplier~\cite{kahneman1979prospect} of $1.2\times$ to negative terms. This reflects the empirical observation that negative financial news tends to have disproportionately larger market impact than equivalently positive news.
+
+For a headline $h$ with token set $T$, let $P$, $N$, $U$, and $L$ be the counts of matched terms in each category. The signal score $s_{\text{lex}}$ is:
+
+\begin{equation}
+s_{\text{lex}} = \max\left(-1, \min\left(1, \frac{P - 1.2N - 0.4U - 0.3L}{|T| + 3}\right)\right)
+\label{eq:lexicon}
+\end{equation}
+
+The denominator includes additive smoothing ($+3$) to prevent extreme scores on short headlines. The confidence $c_{\text{lex}}$ reflects the proportion of headline tokens that carry financial signal:
+
+\begin{equation}
+c_{\text{lex}} = 
+\begin{cases}
+0.15 & \text{if } P + N + U + L = 0 \\
+\min\left(0.95, \frac{2(P + N + U + L)}{|T| + 3}\right) & \text{otherwise}
+\end{cases}
+\label{eq:lexicon_conf}
+\end{equation}
+
+When no financial terms are detected, the signal returns a neutral score with a low default confidence of 0.15, deferring weight to statistical and LLM signals. The scorer runs in approximately 0.1ms per headline on a single CPU core with no external dependencies beyond Python's standard library.
+
+\subsection{Signal 2: Adaptive TF-IDF Cluster Learner}
+\label{sec:cluster}
+
+The core novel contribution of CRANE is an adaptive TF-IDF cluster learner that discovers semantic neighborhoods of headlines and tracks their realized price reactions across multiple assets over time.
+
+\subsubsection{Headline Vectorization}
+
+Each headline $h_i$ is normalized (lowercased, stripped, punctuation-removed, financial stopwords filtered) and tokenized into unigrams and bigrams. Term frequency $TF_i(t)$ and inverse document frequency $IDF(t)$ are computed across the $N$ most recent headlines:
+
+\begin{equation}
+TF_i(t) = \frac{\text{count}(t, h_i)}{|T_i|}, \quad
+IDF(t) = \log\left(\frac{N}{1 + \text{df}(t)}\right)
+\label{eq:tfidf}
+\end{equation}
+
+where $\text{df}(t)$ is the number of documents containing term $t$. The TF-IDF vector for headline $h_i$ is:
+
+\begin{equation}
+\mathbf{v}_i = [TF_i(t) \cdot IDF(t) \mid t \in V]
+\label{eq:vector}
+\end{equation}
+
+where $V$ is the vocabulary of the top 5,000 terms by IDF weight (most discriminative terms). The vocabulary is persisted to the \texttt{cluster\_vocab} table to maintain dimensional consistency across scoring cycles. The vocabulary is periodically rebuilt from the most recent 7 days of headlines, which typically yields 30,000--50,000 candidate terms before IDF-based pruning to 5,000.
+
+\subsubsection{Greedy Incremental Clustering}
+
+Unlike standard clustering algorithms that require all data upfront (K-means, DBSCAN), CRANE uses a greedy incremental method compatible with streaming data. Given a set of headline vectors, we initialize cluster $\mathcal{C}_0$ with vector $\mathbf{v}_0$. For each subsequent vector $\mathbf{v}_i$:
+
+\begin{enumerate}
+    \item Compute cosine similarity to each existing cluster centroid:
+    \begin{equation}
+    \text{sim}(\mathbf{v}_i, \mathcal{C}_j) = \frac{\mathbf{v}_i \cdot \boldsymbol{\mu}_j}{\|\mathbf{v}_i\| \|\boldsymbol{\mu}_j\|}
+    \label{eq:cosine}
+    \end{equation}
+    where $\boldsymbol{\mu}_j = \frac{1}{|\mathcal{C}_j|} \sum_{\mathbf{v} \in \mathcal{C}_j} \mathbf{v}$.
+    \item If $\max_j \text{sim}(\mathbf{v}_i, \mathcal{C}_j) \geq \theta_{\text{cluster}}$ (threshold $\theta_{\text{cluster}} = 0.12$), assign $\mathbf{v}_i$ to the best-matching cluster and update $\boldsymbol{\mu}_j$ as the simple mean of all assigned vectors.
+    \item Otherwise, create a new cluster $\mathcal{C}_{k+1}$ with $\boldsymbol{\mu}_{k+1} = \mathbf{v}_i$.
+\end{enumerate}
+
+To keep computation tractable at scale, the clustering step samples up to 3,000 headlines from the 7-day window (shuffled). The $O(nK)$ per-item complexity means larger samples produce proportionally more clusters; 3,000 items typically yield 500--1,000 clusters before filtering. After clustering, clusters with fewer than 4 samples are discarded as noise.
+
+When scoring new headlines, a separate similarity threshold $\theta_{\text{score}} = 0.15$ is used for cluster assignment. This is slightly more conservative than $\theta_{\text{cluster}}$ to ensure only reasonably confident matches contribute to the statistical signal. Headlines that do not reach this threshold leave \texttt{stat\_score} as NULL (no match) and rely on the ensemble's remaining signals.
+
+\subsubsection{Multi-Asset Cluster-Averaged Price Reactions}
+
+Each cluster $\mathcal{C}_j$ maintains rolling averages of the realized 24-hour price reactions for all headlines assigned to it, across five asset classes:
+
+\begin{equation}
+\overline{\text{ES}}_j = \frac{1}{|\mathcal{C}_j|} \sum_{\mathbf{v} \in \mathcal{C}_j} \text{impact\_24h}_\text{ES}(\mathbf{v}), \quad
+\overline{\text{NQ}}_j = \frac{1}{|\mathcal{C}_j|} \sum_{\mathbf{v} \in \mathcal{C}_j} \text{impact\_24h}_\text{NQ}(\mathbf{v}), \quad \ldots
+\label{eq:cluster_avg}
+\end{equation}
+
+with analogous expressions for $\overline{\text{CL}}_j$, $\overline{\text{BTC}}_j$, and $\overline{\text{ETH}}_j$. The statistical sentiment score for a new headline $h$ is:
+
+\begin{equation}
+s_{\text{stat}}(h) = 
+\begin{cases}
+\max(-1, \min(1, \overline{\text{ES}}_{\text{best}} / 3.0)) & \text{if } \text{sim} \geq \theta_{\text{score}} \\
+0 & \text{otherwise (no cluster match)}
+\end{cases}
+\label{eq:stat_score}
+\end{equation}
+
+where $\overline{\text{ES}}_{\text{best}}$ is the average ES impact of the best-matching cluster, divided by 3 to normalize to $[-1, +1]$ (empirically, 99\% of daily ES moves fall within $\pm 3\%$).
+
+\subsubsection{Cluster Quality Metric (Sharpe Ratio)}
+
+Each cluster tracks a Sharpe-like quality metric:
+
+\begin{equation}
+\text{Sharpe}_j = \frac{\overline{\text{ES}}_j}{\sigma(\text{impact}_j)}
+\label{eq:sharpe}
+\end{equation}
+
+where $\sigma(\text{impact}_j)$ is the standard deviation of 24h impact values within the cluster. Clusters with $|\text{Sharpe}_j| > 1$ represent reliable sentiment signals; clusters with $|\text{Sharpe}_j| < 0.3$ are noise and deprioritized. Clusters with negative Sharpe or fewer than 4 samples are pruned during the periodic cluster maintenance task.
+
+\subsection{Signal 3: LLM Scoring via DeepSeek Zero-Shot}
+
+CRANE supports a third signal from an LLM for zero-shot sentiment classification. Headlines are scored in batches of up to 15 per API call to the DeepSeek API (\texttt{deepseek-chat} model at 0.1 temperature) using a rigid JSON schema instruction set:
+
+\begin{lstlisting}[style=pythonstyle]
+System: Score each headline -1 (bearish) to +1 (bullish), 0 = neutral.
+Output JSON array: [{"score": 0.3, "confidence": 0.85, "themes": "earnings"}]
+\end{lstlisting}
+
+The LLM signal runs every 30 minutes, processing up to 500 unscored headlines per cycle (approximately 34 API calls). Headlines are scored in descending ID order (newest first) to ensure recent market-moving news receives LLM attention promptly, while the historical backlog is backfilled during idle cycles. The default model is \texttt{deepseek-chat}, accessible via API key, with a cost of approximately \$2--5/month at production polling rates.
+
+\subsection{Ensemble Weighting with Auto-Calibration}
+
+The final ensemble score represents a dynamic confidence-weighted combination of the three signals:
+
+\begin{equation}
+s_{\text{ensemble}} = \frac{w_{\text{fin}} c_{\text{fin}} s_{\text{fin}} + w_{\text{stat}} c_{\text{stat}} s_{\text{stat}} + w_{\text{llm}} c_{\text{llm}} s_{\text{llm}}}
+{w_{\text{fin}} c_{\text{fin}} + w_{\text{stat}} c_{\text{stat}} + w_{\text{llm}} c_{\text{llm}}}
+\label{eq:ensemble}
+\end{equation}
+
+where $w_k$ are the signal weights and $c_k$ the per-document confidence scores. Default weights are $w_{\text{fin}} = 0.2895$, $w_{\text{stat}} = 0.4210$, $w_{\text{llm}} = 0.2895$, reflecting the ensemble's empirical calibration: the FinBERT lexicon and LLM signals receive equal weight, while the statistical cluster learner receives approximately 1.45$\times$ more weight because it is the only signal that directly measures market reactions rather than textual sentiment. All default weights are overwritten by the auto-calibration loop.
+
+\subsubsection{Auto-Calibration Loop}
+
+Every 6 hours, the calibration job performs the following sequence:
+
+\begin{enumerate}
+    \item \textbf{Compute realized 24h impacts}: For all news older than 25 hours without a computed realized impact, finds the nearest ES futures price level before the headline's \texttt{publishedAt} timestamp (the ``snapshot'' level) and the nearest level after \texttt{publishedAt} + 24 hours (the ``forward'' level) using a binary search over the sorted price time series, then computes:
+    \begin{equation}
+    \text{impact}_{24h} = \frac{\text{ES}_{\text{forward}} - \text{ES}_{\text{snapshot}}}{\text{ES}_{\text{snapshot}}} \times 100
+    \label{eq:realized}
+    \end{equation}
+    \item \textbf{Compute Spearman correlations}: Computes the Spearman rank correlation $\rho_k$ between each signal $k$ and the realized 24h impacts over the last 7 days. A minimum of 5 samples is required for a meaningful correlation.
+    \item \textbf{Update ensemble weights}:
+    \begin{equation}
+    w_k^{\text{new}} = \frac{\max(0.05, \rho_k)}{\sum_j \max(0.05, \rho_j)}
+    \label{eq:weight_update}
+    \end{equation}
+    The floor of 0.05 ensures no signal is ever completely excluded, maintaining a ``diversity floor'' that prevents the system from converging on a single signal that may become stale.
+    \item \textbf{Detect market regime}: Rolls the last $N=20$ realized 24h ES impacts. Annualized volatility is computed as $\sigma_{\text{ann}} = \sigma_{\text{impact}} \times \sqrt{365}$. Regimes are classified as: \texttt{bullish} (avg 24h impact $> +0.5\%$), \texttt{bearish} ($< -0.5\%$), \texttt{volatile} ($\sigma_{\text{ann}} > 30\%$), \texttt{neutral} (otherwise).
+    \item \textbf{Compute signal-to-noise ratio}: $\text{SNR} = \rho_{\text{ensemble}}^2$, representing the fraction of realized move variance explained by the ensemble score.
+\end{enumerate}
+
+\subsection{Conflict Detection and Anomaly Flagging}
+
+CRANE includes a built-in conflict detection mechanism: when the signals disagree strongly (spread $> 0.6$ on the $[-1,+1]$ scale, representing $>30\%$ disagreement), the ensemble emits a conflict flag rather than a confident signal. This prevents the gauge from showing a confident reading during news events where different signals diverge---a situation that empirically indicates either an unprecedented news type or a conflicting market narrative.
+
+\subsection{Computational Complexity}
+
+The entire pipeline---ingest, score, and ensemble for a batch of 100 headlines---completes in under 3 seconds on a single CPU core (Ryzen 7 7800X3D). Cluster maintenance on 3,000 samples completes in approximately 45 seconds when run every 6 hours. Table~\ref{tab:complexity} breaks down the per-stage complexity.
+
+\begin{table}[ht]
+\centering
+\caption{Computational complexity per pipeline stage.}
+\label{tab:complexity}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Stage} & \textbf{Time (ms)} & \textbf{Big-O} \\
+\midrule
+API fetch (50 items) & 300--800 & $O(1)$ \\
+Hash dedup & $< 1$ & $O(1)$ \\
+FinBERT lexicon scoring (100 rows) & $< 1$ & $O(nm)$ \\
+TF-IDF vectorization + cluster lookup (100 rows) & 20--50 & $O(nv + nK)$ \\
+DeepSeek LLM scoring (200 headlines, 14 batches) & 30,000--60,000 & $O(n)$ \\
+Ensemble computation (100 rows) & $< 1$ & $O(1)$ \\
+Calibration + cluster maintenance (3,000 samples) & 40,000--50,000 & $O(r + svK)$ \\
+\bottomrule
+\multicolumn{3}{l}{\footnotesize $n$ = headlines, $m$ = lexicon size, $v$ = vocab size, $K$ = clusters, $s$ = sample size, $r$ = calibration rows} \\
+\end{tabular}
+\end{table}

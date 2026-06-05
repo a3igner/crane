@@ -1,0 +1,173 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{fama1970efficient}
+\citation{finbert2020}
+\citation{cristescu2025finbert}
+\citation{kirtac2025llmfinance}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Motivation}{1}{subsection.1.1}\protected@file@percent }
+\citation{loughran2011liability}
+\citation{loughran2011liability}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Our Contribution}{2}{subsection.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3}Scope and Roadmap}{2}{subsection.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{2}{section.2}\protected@file@percent }
+\newlabel{sec:related}{{2}{2}{Related Work}{section.2}{}}
+\citation{catelli2022lexicon}
+\citation{hutto2014vader}
+\citation{singh2024stochastic}
+\citation{devlin2019bert}
+\citation{finbert2020}
+\citation{malo2014phrasebank}
+\citation{finberttone2021}
+\citation{tang2023fmentity}
+\citation{iacovides2024finllama,cristescu2025finbert}
+\citation{iacovides2024finllama}
+\citation{amorin2025lightweight}
+\citation{dai2026beyond}
+\citation{kirtac2025llmfinance}
+\citation{mishra2025hybrid}
+\citation{liu2025enhancing}
+\citation{passalis2021sentiment}
+\citation{song2025adapter}
+\citation{tsaknaki2023online}
+\citation{parra2023sentiment}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Lexicon-Based Approaches}{3}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}FinBERT and Financial Language Models}{3}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}LLM-Based Sentiment}{3}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Ensemble and Hybrid Systems}{3}{subsection.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Online and Streaming Sentiment Adaptation}{4}{subsection.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Identification of Research Gaps}{4}{subsection.2.6}\protected@file@percent }
+\newlabel{sec:gaps}{{2.6}{4}{Identification of Research Gaps}{subsection.2.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}System Architecture}{4}{section.3}\protected@file@percent }
+\newlabel{sec:architecture}{{3}{4}{System Architecture}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Data Source}{4}{subsection.3.1}\protected@file@percent }
+\citation{loughran2011liability}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Pipeline Overview}{5}{subsection.3.2}\protected@file@percent }
+\newlabel{eq:pipeline}{{1}{5}{Pipeline Overview}{equation.3.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}MySQL Schema}{5}{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.1}\texttt  {news\_events}}{5}{subsubsection.3.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.2}\texttt  {sentiment\_signals}}{5}{subsubsection.3.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.3}\texttt  {cluster\_dictionary}}{5}{subsubsection.3.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.4}\texttt  {calibration\_history}}{5}{subsubsection.3.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.5}\texttt  {cluster\_vocab}}{5}{subsubsection.3.3.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Dual-Layer Deduplication Strategy}{5}{subsection.3.4}\protected@file@percent }
+\citation{kahneman1979prospect}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Technical Approach}{6}{section.4}\protected@file@percent }
+\newlabel{sec:approach}{{4}{6}{Technical Approach}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Signal 1: Financial Lexicon (FinBERT-Style)}{6}{subsection.4.1}\protected@file@percent }
+\newlabel{eq:lexicon}{{2}{6}{Signal 1: Financial Lexicon (FinBERT-Style)}{equation.4.2}{}}
+\newlabel{eq:lexicon_conf}{{3}{6}{Signal 1: Financial Lexicon (FinBERT-Style)}{equation.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Signal 2: Adaptive TF-IDF Cluster Learner}{6}{subsection.4.2}\protected@file@percent }
+\newlabel{sec:cluster}{{4.2}{6}{Signal 2: Adaptive TF-IDF Cluster Learner}{subsection.4.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.1}Headline Vectorization}{6}{subsubsection.4.2.1}\protected@file@percent }
+\newlabel{eq:tfidf}{{4}{6}{Headline Vectorization}{equation.4.4}{}}
+\newlabel{eq:vector}{{5}{6}{Headline Vectorization}{equation.4.5}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.2}Greedy Incremental Clustering}{7}{subsubsection.4.2.2}\protected@file@percent }
+\newlabel{eq:cosine}{{6}{7}{Greedy Incremental Clustering}{equation.4.6}{}}
+\newlabel{eq:ema}{{7}{7}{Greedy Incremental Clustering}{equation.4.7}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3}Multi-Asset Cluster-Averaged Price Reactions}{7}{subsubsection.4.2.3}\protected@file@percent }
+\newlabel{eq:cluster_avg}{{8}{7}{Multi-Asset Cluster-Averaged Price Reactions}{equation.4.8}{}}
+\newlabel{eq:stat_score}{{9}{7}{Multi-Asset Cluster-Averaged Price Reactions}{equation.4.9}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.4}Cluster Quality Metric (Sharpe Ratio)}{7}{subsubsection.4.2.4}\protected@file@percent }
+\newlabel{eq:sharpe}{{10}{7}{Cluster Quality Metric (Sharpe Ratio)}{equation.4.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Signal 3: LLM Scoring via DeepSeek Zero-Shot}{7}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Ensemble Weighting with Auto-Calibration}{8}{subsection.4.4}\protected@file@percent }
+\newlabel{eq:ensemble}{{11}{8}{Ensemble Weighting with Auto-Calibration}{equation.4.11}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.1}Auto-Calibration Loop}{8}{subsubsection.4.4.1}\protected@file@percent }
+\newlabel{eq:realized}{{12}{8}{Auto-Calibration Loop}{equation.4.12}{}}
+\newlabel{eq:weight_update}{{13}{8}{Auto-Calibration Loop}{equation.4.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Conflict Detection and Anomaly Flagging}{8}{subsection.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Computational Complexity}{8}{subsection.4.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Novelty Analysis and Comparative Evaluation}{8}{section.5}\protected@file@percent }
+\newlabel{sec:novelty}{{5}{8}{Novelty Analysis and Comparative Evaluation}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Positioning Against Existing Methods}{8}{subsection.5.1}\protected@file@percent }
+\citation{mishra2025hybrid,liu2025enhancing}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Computational complexity per pipeline stage.}}{9}{table.1}\protected@file@percent }
+\newlabel{tab:complexity}{{1}{9}{Computational complexity per pipeline stage}{table.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}The Adaptability Gap}{9}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Cost--Latency--Accuracy--Adaptability Trade-Off Analysis}{9}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Regime Shift Performance}{9}{subsection.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Novelty Assessment}{9}{subsection.5.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{G1: No free, adaptive, CPU-only system exists.}{9}{section*.1}\protected@file@percent }
+\citation{salton1988term}
+\citation{parra2023sentiment}
+\citation{song2025adapter}
+\@writefile{toc}{\contentsline {paragraph}{G2: No real-time ensemble calibration against market reactions.}{10}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{G3: No practical cluster-based sentiment learning with cross-asset signatures.}{10}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{G4: Cost--latency--accuracy--adaptability trade-off underexplored.}{10}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{G5: Online regime detection without retraining is underdeveloped.}{10}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Threats to Validity}{10}{subsection.5.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Implementation and Deployment}{10}{section.6}\protected@file@percent }
+\newlabel{sec:implementation}{{6}{10}{Implementation and Deployment}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Software Stack}{10}{subsection.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Hermes Cron Pipeline}{10}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Impact Computation via Price Time Series}{11}{subsection.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Live Sentiment Gauge Widget}{11}{subsection.6.4}\protected@file@percent }
+\newlabel{sec:widget}{{6.4}{11}{Live Sentiment Gauge Widget}{subsection.6.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Source Code and Reproducibility}{11}{subsection.6.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion and Future Work}{12}{section.7}\protected@file@percent }
+\newlabel{sec:conclusion}{{7}{12}{Conclusion and Future Work}{section.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Summary}{12}{subsection.7.1}\protected@file@percent }
+\citation{dspy2024}
+\citation{kirtac2025llmfinance}
+\bibstyle{elsarticle-num}
+\bibdata{references}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Limitations}{13}{subsection.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Future Work}{13}{subsection.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{F1: Multi-Asset Signature Vectors.}{13}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{F2: DSPy Integration for LLM Prompt Optimization.}{13}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{F3: Tick-Level Price Calibration.}{13}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{F4: Cross-Cluster Spillover Tracking.}{13}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{F5: Real-Time Conflict Monitoring.}{13}{section*.10}\protected@file@percent }
+\bibcite{fama1970efficient}{{1}{}{{}}{{}}}
+\bibcite{finbert2020}{{2}{}{{}}{{}}}
+\bibcite{cristescu2025finbert}{{3}{}{{}}{{}}}
+\bibcite{kirtac2025llmfinance}{{4}{}{{}}{{}}}
+\bibcite{loughran2011liability}{{5}{}{{}}{{}}}
+\bibcite{catelli2022lexicon}{{6}{}{{}}{{}}}
+\bibcite{hutto2014vader}{{7}{}{{}}{{}}}
+\bibcite{singh2024stochastic}{{8}{}{{}}{{}}}
+\bibcite{devlin2019bert}{{9}{}{{}}{{}}}
+\bibcite{malo2014phrasebank}{{10}{}{{}}{{}}}
+\bibcite{finberttone2021}{{11}{}{{}}{{}}}
+\bibcite{tang2023fmentity}{{12}{}{{}}{{}}}
+\bibcite{iacovides2024finllama}{{13}{}{{}}{{}}}
+\bibcite{amorin2025lightweight}{{14}{}{{}}{{}}}
+\bibcite{dai2026beyond}{{15}{}{{}}{{}}}
+\bibcite{mishra2025hybrid}{{16}{}{{}}{{}}}
+\bibcite{liu2025enhancing}{{17}{}{{}}{{}}}
+\bibcite{passalis2021sentiment}{{18}{}{{}}{{}}}
+\bibcite{song2025adapter}{{19}{}{{}}{{}}}
+\bibcite{tsaknaki2023online}{{20}{}{{}}{{}}}
+\bibcite{parra2023sentiment}{{21}{}{{}}{{}}}
+\bibcite{kahneman1979prospect}{{22}{}{{}}{{}}}
+\bibcite{salton1988term}{{23}{}{{}}{{}}}
+\bibcite{dspy2024}{{24}{}{{}}{{}}}
+\providecommand\NAT@force@numbers{}\NAT@force@numbers
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces End-to-end pipeline architecture. The API feeds into the ingest stage, which writes to \texttt  {news\_events} in MySQL. The scoring stage computes three parallel sentiment signals. The cluster stage maintains the TF-IDF centroid dictionary. The calibration stage computes 24h forward price impacts, adjusts ensemble weights, and detects market regime. Dashed arrows represent the weights feedback loop.}}{15}{figure.1}\protected@file@percent }
+\newlabel{fig:pipeline}{{1}{15}{End-to-end pipeline architecture. The API feeds into the ingest stage, which writes to \texttt {news\_events} in MySQL. The scoring stage computes three parallel sentiment signals. The cluster stage maintains the TF-IDF centroid dictionary. The calibration stage computes 24h forward price impacts, adjusts ensemble weights, and detects market regime. Dashed arrows represent the weights feedback loop}{figure.1}{}}
+\newlabel{RF1}{16}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Comprehensive comparison of CRANE (ours) against existing sentiment approaches. All comparisons are based on published specifications in the cited works and our own benchmarks.}}{16}{table.2}\protected@file@percent }
+\newlabel{tab:comparison}{{2}{16}{Comprehensive comparison of CRANE (ours) against existing sentiment approaches. All comparisons are based on published specifications in the cited works and our own benchmarks}{table.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Qualitative trade-off analysis across four dimensions. CRANE is the only method occupying all three favorable quadrants simultaneously.}}{17}{table.3}\protected@file@percent }
+\newlabel{tab:tradeoff}{{3}{17}{Qualitative trade-off analysis across four dimensions. CRANE is the only method occupying all three favorable quadrants simultaneously}{table.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Directional accuracy during 48-hour macro regime shock windows.}}{17}{table.4}\protected@file@percent }
+\newlabel{tab:regime}{{4}{17}{Directional accuracy during 48-hour macro regime shock windows}{table.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Live sentiment gauge mockup (dark theme, tradeflags.com style). The production widget fetches JSON from \texttt  {sentiment\_api.py} and auto-refreshes every 60 seconds.}}{17}{figure.2}\protected@file@percent }
+\newlabel{fig:gauge}{{2}{17}{Live sentiment gauge mockup (dark theme, tradeflags.com style). The production widget fetches JSON from \texttt {sentiment\_api.py} and auto-refreshes every 60 seconds}{figure.2}{}}

@@ -1,0 +1,50 @@
+% ============================================================
+% Section 2: Related Work
+% ============================================================
+\section{Related Work}
+\label{sec:related}
+
+The literature on financial news sentiment analysis spans four decades and multiple methodological paradigms. We organize prior work into six categories, ordered by increasing sophistication and computational cost.
+
+\subsection{Lexicon-Based Approaches}
+
+The earliest systematic approach to financial sentiment analysis relies on domain-specific lexicons---curated word lists with pre-assigned sentiment polarities and intensities. The Loughran-McDonald dictionary~\cite{loughran2011liability}, developed specifically for financial text, remains the most widely used baseline. It classifies words into seven categories: Positive, Negative, Uncertainty, Litigious, Strong Modal, Weak Modal, and Constraining. Studies demonstrate that generic sentiment lexicons perform poorly on financial text because financial language uses words like ``risk,'' ``volatility,'' and ``liability'' with domain-specific connotations~\cite{loughran2011liability}.
+
+Lexicon-based methods are computationally trivial---$O(n)$ in document length, with sub-millisecond latency per headline---and require no training data. However, their accuracy plateaus at roughly 65--70\% F1 on financial text benchmarks~\cite{catelli2022lexicon}. They cannot handle negation scope, sarcasm, or context-dependent sentiment. VADER~\cite{hutto2014vader}, a general-purpose valence-aware lexicon, performs worse on financial text than domain-adapted dictionaries~\cite{singh2024stochastic}.
+
+\subsection{FinBERT and Financial Language Models}
+
+The introduction of BERT~\cite{devlin2019bert} for financial NLP marked a step-change in accuracy. ProsusAI/FinBERT~\cite{finbert2020} fine-tunes BERT on financial news headlines using the Financial PhraseBank dataset~\cite{malo2014phrasebank}, achieving approximately 85--87\% F1 on financial sentiment classification. Variants include FinBERT-Tone~\cite{finberttone2021}, fine-tuned on analyst reports, and FinEntity~\cite{tang2023fmentity}, which performs entity-level sentiment extraction.
+
+FinBERT requires a GPU for practical inference (approximately 50ms per document on a T4) and must be retrained or fine-tuned when the underlying financial language distribution shifts. Multiple studies~\cite{iacovides2024finllama, cristescu2025finbert} benchmark FinBERT against GPT-based approaches and find that while GPT-4 achieves higher accuracy, the per-document cost is roughly 300--500$\times$ higher and latency is 20--40$\times$ worse. The static nature of these models creates a structural vulnerability: during macro regime shifts, a FinBERT model trained on pre-2022 data will misclassify rate-hike headlines as uniformly negative even when the market has repriced them as economic-strength signals.
+
+\subsection{LLM-Based Sentiment}
+
+The most recent work leverages instruction-tuned LLMs for financial sentiment. \citet{iacovides2024finllama} propose FinLlama, a fine-tuned Llama model for financial sentiment that reports comparable accuracy to GPT-4 at inference costs closer to FinBERT. \citet{amorin2025lightweight} demonstrate that fine-tuning lightweight LLMs (Phi-2, Gemma-2B) on heterogeneous financial text achieves competitive results with larger models at reduced inference cost.
+
+\citet{dai2026beyond} show that multi-dimensional LLM sentiment signals (separate scores for sentiment, uncertainty, and urgency) outperform single-polarity scores for crude oil futures prediction. \citet{kirtac2025llmfinance} provide a critical perspective, arguing that the construct of ``financial sentiment'' is poorly defined across studies and that different LLMs produce systematically different scores for the same text, raising reproducibility concerns. CRANE addresses this by using the LLM signal as an intermittent, optional layer whose weight is determined entirely by empirical correlation with realized price moves.
+
+\subsection{Ensemble and Hybrid Systems}
+
+Combining multiple sentiment signals is well-studied. \citet{mishra2025hybrid} survey hybrid deep learning pipelines and find that ensemble approaches consistently outperform single-model baselines. \citet{liu2025enhancing} combine GPT-2 and FinBERT with technical indicators and ARIMA for S\&P 500 return prediction. \citet{passalis2021sentiment} propose sentiment-aware trading strategies using deep learning features combined with financial news.
+
+However, existing ensemble systems either (a) use static weights determined during an offline training phase, (b) require full retraining for weight updates, or (c) calibrate against human-labeled validation sets rather than actual price moves. CRANE diverges from this paradigm by implementing an \emph{online weight adaptation loop driven entirely by realized asset price returns} rather than static accuracy metrics. This use of realized price reaction as a supervisory signal for ensemble weight optimization is, to our knowledge, not described in the existing ensemble sentiment literature.
+
+\subsection{Online and Streaming Sentiment Adaptation}
+
+The challenge of adapting sentiment models to changing market conditions is recognized but under-addressed. \citet{song2025adapter} propose adapter-regularized continual learning for dynamic financial sentiment encoding using parameter-efficient fine-tuning. \citet{tsaknaki2023online} apply Bayesian change-point detection to online learning of order flow and market impact. \citet{parra2023sentiment} predict cryptocurrency regime changes using sentiment features.
+
+These approaches address the adaptation problem but require GPU-based training (continual learning) or probabilistic modeling (Bayesian change-point detection) that adds complexity and cost. None use the approach of \emph{headline clustering with rolling average multi-asset price reactions} that CRANE proposes---a method requiring no gradient computation, no GPU, and no labeled data.
+
+\subsection{Identification of Research Gaps}
+\label{sec:gaps}
+
+From this review, we identify five specific gaps that CRANE addresses:
+
+\begin{enumerate}[label=\textbf{G\arabic*}.]
+    \item \textbf{No free, adaptive, CPU-only sentiment system exists.} Existing methods lie on a spectrum from cheap-and-static (lexicon) to accurate-and-expensive (LLM). The middle ground---a system that adapts to regime changes without compute cost---is unoccupied.
+    \item \textbf{No real-time ensemble calibration against market reactions.} Prior ensemble work uses held-out validation sets, not live multi-asset price data, to tune weights.
+    \item \textbf{No practical cluster-based sentiment learning with cross-asset signatures.} While TF-IDF clustering for document organization is well-known, using cluster centroids that maintain rolling vectors of realized price impacts across multiple asset classes simultaneously is, to our knowledge, novel.
+    \item \textbf{Cost--latency--accuracy--adaptability trade-off is underexplored.} Benchmarking papers compare accuracy but rarely include operational cost, latency, and adaptability as explicit evaluation dimensions.
+    \item \textbf{Online regime detection without retraining is underdeveloped.} Existing regime-switching approaches require probabilistic modeling or continual learning with GPUs. CRANE's volatility-based regime detection coupled with adaptive cluster centroids provides a lightweight alternative.
+\end{enumerate}

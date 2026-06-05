@@ -1,0 +1,93 @@
+% ============================================================
+% CRANE: Zero-Shot Market Regime Adaptation in Real-Time News Sentiment
+% A CPU-Native Ensemble Without Neural Retraining
+% Author: Andreas A. Aigner
+% Affiliation: Tradeflags.com
+% Contact: Andreas@tradeflags.com
+% ============================================================
+\documentclass[3p,times]{elsarticle}
+
+\usepackage{ecrc}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit}
+
+% --- Custom logo ---
+\renewcommand{\jnllogo}{\includegraphics[height=42pt]{../tradeflags-logo-new.pdf}}
+
+% --- Required ecrc commands ---
+\volume{03}
+\firstpage{1}
+\journalname{Tradeflags Research Report}
+\runauth{Aigner}
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{rotating}
+
+% --- Hyperlinks ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=green!40!black,
+    urlcolor=blue!70!black,
+    pdftitle={CRANE: Zero-Shot Market Regime Adaptation in Real-Time News Sentiment},
+    pdfauthor={Andreas A. Aigner},
+    pdfsubject={Financial NLP, Sentiment Analysis, TF-IDF Clustering, Ensemble Methods, Online Learning}
+}
+
+% Code listing style
+\lstdefinestyle{pythonstyle}{
+    language=Python,
+    basicstyle=\footnotesize\ttfamily,
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true,
+    backgroundcolor=\color{gray!5},
+    commentstyle=\color{green!50!black},
+    keywordstyle=\color{blue},
+}
+
+\begin{document}
+
+% --- Title and Author ---
+\title{CRANE:\\Cluster-Reactive Adaptive News Ensemble\\---\\Zero-Shot Market Regime Adaptation in\\Real-Time News Sentiment via a CPU-Native\\Ensemble Without Neural Retraining}
+
+\author{Andreas A.~Aigner}
+\address{Tradeflags.com\\%
+         \texttt{Andreas@tradeflags.com}}
+
+\begin{abstract}
+We present CRANE (Cluster-Reactive Adaptive News Ensemble), a sentiment engine that continuously learns market sentiment from paired news headlines and concurrent multi-asset price snapshots without requiring any neural network training or GPU compute. The system uses a three-way ensemble combining (1) a financial-domain lexicon with approximately 400 terms incorporating prospect-theory loss aversion multipliers, (2) an adaptive TF-IDF cluster learner that organizes headlines into semantic neighborhoods and tracks their average realized multi-asset price reactions across five asset classes (ES, NQ, CL, BTC, ETH), and (3) an LLM signal via DeepSeek zero-shot classification scoring 500 newest headlines every 30 minutes. A rolling Spearman rank correlation framework dynamically tunes ensemble weights every 6 hours against realized 24-hour forward price impacts. Over 430,000 headline--price pairings are processed on a CPU-only pipeline with no ongoing API costs beyond a \$2--5/month DeepSeek budget. Over a 90-day production evaluation window, it achieves an Information Coefficient of $\rho = 0.35$ post-convergence, approaching GPT-4 zero-shot scoring ($\rho = 0.40$) while operating at approximately 1/400th the cost. During macro regime shocks, CRANE's cluster learner adapts within 10--20 headline exposures, maintaining directional accuracy of 74.2\% compared to FinBERT's collapse to 52.1\%. The system powers a live interactive HTML sentiment gauge deployed on Tradeflags.com covering five-asset sentiment impacts.
+\end{abstract}
+
+\begin{keyword}
+Financial Sentiment Analysis \sep CRANE \sep Online Learning \sep TF-IDF Clustering \sep Ensemble Methods \sep Cluster-Reactive Sentiment \sep Market Regime Adaptation \sep CPU-Native Inference \sep News-Driven Trading
+\end{keyword}
+
+\maketitle
+
+% --- Include all paper parts ---
+\input{01-introduction}
+\input{02-related-work}
+\input{03-system-architecture}
+\input{04-technical-approach}
+\input{05-novelty-and-comparison}
+\input{06-implementation}
+\input{07-conclusion}
+
+% --- Bibliography ---
+\bibliographystyle{elsarticle-num}
+\bibliography{references}
+
+\end{document}

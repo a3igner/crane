@@ -1,0 +1,147 @@
+\begin{thebibliography}{10}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\expandafter\ifx\csname href\endcsname\relax
+  \def\href#1#2{#2} \def\path#1{#1}\fi
+
+\bibitem{fama1970efficient}
+E.~F. Fama, Efficient capital markets: A review of theory and empirical work,
+  Journal of Finance 25~(2) (1970) 383--417.
+
+\bibitem{finbert2020}
+D.~Araci, Finbert: Financial sentiment analysis with pre-trained language
+  models, arXiv preprintArXiv:1908.10063.
+
+\bibitem{cristescu2025finbert}
+M.~P. Cristescu, C.~Br{\^a}nda{\c{s}}, D.~A. Mara, P.~Ioana, Fine-tuning and
+  explaining finbert for sector-specific financial news: A reproducible
+  workflow, Electronics 14~(23) (2025) 4680.
+\newblock \href {http://dx.doi.org/10.3390/electronics14234680}
+  {\path{doi:10.3390/electronics14234680}}.
+
+\bibitem{kirtac2025llmfinance}
+K.~Kirtac, G.~Germano, Large language models in finance: What is financial
+  sentiment?, in: SSRN Working Paper, 2025.
+\newblock \href {http://dx.doi.org/10.2139/ssrn.5166656}
+  {\path{doi:10.2139/ssrn.5166656}}.
+
+\bibitem{loughran2011liability}
+T.~Loughran, B.~McDonald, When is a liability not a liability? textual
+  analysis, dictionaries, and 10-ks, Journal of Finance 66~(1) (2011) 35--65.
+
+\bibitem{catelli2022lexicon}
+R.~Catelli, S.~Pelosi, M.~Esposito, Lexicon-based vs. bert-based sentiment
+  analysis: A comparative study in italian, Electronics 11~(3) (2022) 374.
+\newblock \href {http://dx.doi.org/10.3390/electronics11030374}
+  {\path{doi:10.3390/electronics11030374}}.
+
+\bibitem{hutto2014vader}
+C.~Hutto, E.~Gilbert, Vader: A parsimonious rule-based model for sentiment
+  analysis of social media text, in: International AAAI Conference on Web and
+  Social Media (ICWSM), 2014.
+
+\bibitem{singh2024stochastic}
+A.~Singh, M.~P., Stochastic sentiment analysis for trading signals based on
+  financial news headlines, in: International Conference on Electrical
+  Electronics and Computing Technologies (ICEECT), 2024.
+\newblock \href {http://dx.doi.org/10.1109/ICEECT61758.2024.10739089}
+  {\path{doi:10.1109/ICEECT61758.2024.10739089}}.
+
+\bibitem{devlin2019bert}
+J.~Devlin, M.-W. Chang, K.~Lee, K.~Toutanova, Bert: Pre-training of deep
+  bidirectional transformers for language understanding, arXiv
+  preprintArXiv:1810.04805v2.
+\newblock \href {http://dx.doi.org/10.48550/arXiv.1810.04805}
+  {\path{doi:10.48550/arXiv.1810.04805}}.
+
+\bibitem{malo2014phrasebank}
+P.~Malo, A.~Sinha, P.~Korhonen, J.~Wallenius, P.~Takala, Good debt or bad debt:
+  Detecting semantic orientations in economic texts, Journal of the Association
+  for Information Science and Technology 65~(4) (2014) 782--796.
+
+\bibitem{finberttone2021}
+Y.~Huang, et~al., Finbert-tone: Fine-tuned bert for financial tone analysis,
+  GitHub repository\url{https://github.com/yiyanghkust/finbert-tone}.
+
+\bibitem{tang2023fmentity}
+Y.~Tang, Y.~Yang, A.~H. Huang, A.~Tam, J.~Tang, Finentity: Entity-level
+  sentiment classification for financial texts, in: Conference on Empirical
+  Methods in Natural Language Processing (EMNLP), 2023.
+\newblock \href {http://dx.doi.org/10.48550/arXiv.2310.12406}
+  {\path{doi:10.48550/arXiv.2310.12406}}.
+
+\bibitem{iacovides2024finllama}
+G.~Iacovides, T.~Konstantinidis, M.~Xu, D.~Mandic, Finllama: Llm-based
+  financial sentiment analysis for algorithmic trading, in: International
+  Conference on AI in Finance (ICAIF), 2024.
+\newblock \href {http://dx.doi.org/10.1145/3677052.3698696}
+  {\path{doi:10.1145/3677052.3698696}}.
+
+\bibitem{amorin2025lightweight}
+A.~Amorin, A.~Python, C.~Weisser, Fine-tuning of lightweight large language
+  models for sentiment classification on heterogeneous financial textual data,
+  arXiv preprintArXiv:2512.00946.
+\newblock \href {http://dx.doi.org/10.48550/arXiv.2512.00946}
+  {\path{doi:10.48550/arXiv.2512.00946}}.
+
+\bibitem{dai2026beyond}
+D.~Dai, D.~Ma, D.~Liu, K.~Geng, Y.~Wang, Beyond polarity: Multi-dimensional llm
+  sentiment signals for wti crude oil futures return predictionS2 paper ID
+  286489493.
+
+\bibitem{mishra2025hybrid}
+U.~Mishra, P.~R. Chandre, N.~Saxena, S.~Saxena, Hybrid dl models for stock
+  market analysis: A comparative survey of feature engineering, ensemble
+  strategies, and risk metrics, in: IEEE International Conference on Blockchain
+  and Distributed Systems Security (ICBDS), 2025.
+\newblock \href {http://dx.doi.org/10.1109/ICBDS67396.2025.11376636}
+  {\path{doi:10.1109/ICBDS67396.2025.11376636}}.
+
+\bibitem{liu2025enhancing}
+H.~Liu, Z.~Lin, R.~R. Rojas, Enhancing trading performance through sentiment
+  analysis with large language models: Evidence from the s\&p 500S2 paper ID
+  280233126.
+
+\bibitem{passalis2021sentiment}
+N.~Passalis, S.~Seficha, A.~Tsantekidis, A.~Tefas, Learning sentiment-aware
+  trading strategies for bitcoin leveraging deep learning-based financial news
+  analysis, in: Artificial Intelligence Applications and Innovations (AIAI),
+  2021.
+\newblock \href {http://dx.doi.org/10.1007/978-3-030-79150-6_59}
+  {\path{doi:10.1007/978-3-030-79150-6_59}}.
+
+\bibitem{song2025adapter}
+Z.~Song, R.~Huang, A.~Li, A.~Shen, H.~Chen, Adapter-regularised continual
+  learning for dynamic financial sentiment encoding in multi-modal market
+  fusion, Expert Systems\href {http://dx.doi.org/10.1111/exsy.70178}
+  {\path{doi:10.1111/exsy.70178}}.
+
+\bibitem{tsaknaki2023online}
+I.-Y. Tsaknaki, F.~Lillo, P.~Mazzarisi, Online learning of order flow and
+  market impact with bayesian change-point detection methodsS2 paper ID
+  274683885.
+
+\bibitem{parra2023sentiment}
+J.~P. Moyano, D.~Partida, M.~Gessl, Your sentiment matters: A machine learning
+  approach for predicting regime changes in the cryptocurrency market, in:
+  Hawaii International Conference on System Sciences (HICSS), 2023.
+\newblock \href {http://dx.doi.org/10.24251/hicss.2023.115}
+  {\path{doi:10.24251/hicss.2023.115}}.
+
+\bibitem{kahneman1979prospect}
+D.~Kahneman, A.~Tversky, Prospect theory: An analysis of decision under risk,
+  Econometrica 47~(2) (1979) 263--291.
+
+\bibitem{salton1988term}
+G.~Salton, C.~Buckley, Term-weighting approaches in automatic text retrieval,
+  Information Processing and Management 24~(5) (1988) 513--523.
+
+\bibitem{dspy2024}
+O.~Khattab, A.~Singhvi, P.~Maheshwari, et~al., Dspy: Compiling declarative
+  language model calls into self-improving pipelines, arXiv
+  preprintArXiv:2310.03714.
+\newblock \href {http://dx.doi.org/10.48550/arXiv.2310.03714}
+  {\path{doi:10.48550/arXiv.2310.03714}}.
+
+\end{thebibliography}

@@ -1,0 +1,58 @@
+This is BibTeX, Version 0.99d (TeX Live 2019/Debian)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: elsarticle-num.bst
+Database file #1: references.bib
+Warning--empty pages in kirtac2025llmfinance
+Warning--empty pages in hutto2014vader
+Warning--empty pages in singh2024stochastic
+Warning--empty pages in tang2023fmentity
+Warning--empty pages in iacovides2024finllama
+Warning--empty journal in dai2026beyond
+Warning--empty pages in mishra2025hybrid
+Warning--empty journal in liu2025enhancing
+Warning--empty pages in passalis2021sentiment
+Warning--empty journal in tsaknaki2023online
+Warning--empty pages in parra2023sentiment
+You've used 24 entries,
+            2937 wiz_defined-function locations,
+            804 strings with 9975 characters,
+and the built_in function-call counts, 6527 in all, are:
+= -- 588
+> -- 249
+< -- 0
++ -- 99
+- -- 75
+* -- 445
+:= -- 911
+add.period$ -- 36
+call.type$ -- 24
+change.case$ -- 32
+chr.to.int$ -- 0
+cite$ -- 35
+duplicate$ -- 204
+empty$ -- 755
+format.name$ -- 97
+if$ -- 1699
+int.to.chr$ -- 0
+int.to.str$ -- 24
+missing$ -- 24
+newline$ -- 92
+num.names$ -- 24
+pop$ -- 164
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 467
+stack$ -- 0
+substring$ -- 156
+swap$ -- 33
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 11
+while$ -- 36
+width$ -- 26
+write$ -- 220
+(There were 11 warnings)

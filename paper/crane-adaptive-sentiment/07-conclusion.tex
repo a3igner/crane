@@ -1,0 +1,63 @@
+% ============================================================
+% Section 7: Conclusion
+% ============================================================
+\section{Conclusion and Future Work}
+\label{sec:conclusion}
+
+\subsection{Summary}
+
+We have presented CRANE (Cluster-Reactive Adaptive News Ensemble), a sentiment engine that addresses three fundamental limitations of existing financial sentiment analysis systems: cost, adaptability, and ground-truth calibration. CRANE makes the following contributions:
+
+\begin{enumerate}
+    \item \textbf{Architectural novelty}: A three-signal ensemble (financial lexicon with prospect-theory loss aversion, adaptive multi-asset TF-IDF cluster learner across five asset classes, optional DeepSeek zero-shot LLM) with auto-calibrating weights that optimize against realized 24-hour forward price moves.
+
+    \item \textbf{Adaptive TF-IDF cluster learner}: A greedy incremental clustering algorithm with EMA centroid drift ($\alpha = 0.05$) that organizes headlines into semantic neighborhoods and tracks rolling average price reactions across ES, NQ, CL, BTC, and ETH simultaneously. This is the first system, to our knowledge, to use multi-asset headline clustering as an online sentiment learning mechanism that adapts to market regime changes without retraining or GPU compute.
+
+    \item \textbf{Cost breakthrough}: The entire pipeline runs on a single CPU at sub-2-second latency per 50-headline batch, with zero marginal inference cost. Trained on over 430,000 headline--price pairings spanning two years, the system has learned from a diverse range of market regimes. In comparison, GPT-4o-mini-based sentiment analysis costs approximately \$30--90 per million headlines and requires API access.
+
+    \item \textbf{Price-based auto-calibration}: A rolling Spearman rank correlation framework evaluated every 6 hours that adjusts ensemble weights using a modified softmax with a 0.05 diversity floor, ensuring no signal is ever completely excluded while dynamically shifting toward the historically most predictive signal.
+
+    \item \textbf{Regime-resilient performance}: During macro regime shocks, CRANE maintains 74.2\% directional accuracy compared to FinBERT's collapse to 52.1\%, with an overall post-convergence Information Coefficient of $\rho = 0.35$ versus GPT-4o-mini's $\rho = 0.40$ at 1/400th the cost.
+
+    \item \textbf{Comprehensive comparison}: We provide a structured evaluation against six existing methods (FinBERT, GPT-4o-mini, FinLlama, VADER, Bloomberg Sentiment, Alpha Vantage) across nine dimensions, identifying the ``adaptability gap'' that CRANE fills.
+
+    \item \textbf{Live production deployment}: The system is deployed as a production Hermes cron pipeline with an interactive dark-theme HTML sentiment gauge widget covering five-asset sentiment impacts with auto-refresh.
+\end{enumerate}
+
+\subsection{Limitations}
+
+While CRANE introduces several novelties, we acknowledge important limitations:
+
+\begin{itemize}
+    \item \textbf{Approximate ground truth}: The realized price move uses a 24-hour forward window computed from the API's own price snapshot time series, which mixes overnight gaps and next-session open effects with headline-driven reactions. A dedicated tick-level feed would enable precise multi-horizon window sizing (5-minute, 1-hour, 4-hour alongside 24-hour).
+
+    \item \textbf{Cold-start phase}: The statistical cluster learner requires approximately 500 headlines to produce stable centroids and return buffers. During this initial period (approximately 5--7 days at 3-hour polling), CRANE relies primarily on the FinBERT lexicon scorer via its higher default weight.
+
+    \item \textbf{No causal inference}: The system detects correlation between headlines and price moves but cannot distinguish between ``news caused the move'' and ``the move happened to coincide with the news.'' More rigorous causal inference methods (e.g., synthetic controls, difference-in-differences) would require additional data infrastructure.
+
+    \item \textbf{English-only}: The FinBERT lexicon and TF-IDF cluster learner are currently English-only. Financial news in other languages would need separate lexicons and tokenization pipelines.
+
+    \item \textbf{Single-asset calibration}: While CRANE stores and displays multi-asset cluster impacts (ES, NQ, CL, BTC, ETH), the auto-calibration loop currently optimizes against ES futures ($\texttt{pc\_esf}$) only. Full multi-asset calibration remains future work.
+\end{itemize}
+
+\subsection{Future Work}
+
+We identify five directions for future development:
+
+\paragraph{F1: Multi-Asset Signature Vectors.} Currently, the ensemble calibrates against $\texttt{pc\_esf}$ only, while each cluster stores $\overline{\text{ES}}$, $\overline{\text{NQ}}$, $\overline{\text{CL}}$, $\overline{\text{BTC}}$, and $\overline{\text{ETH}}$ impact averages. A natural extension is full multi-asset calibration, where the ensemble weight optimization minimizes a portfolio of prediction errors across all five assets simultaneously. This would enable cross-asset sentiment signatures---e.g., a ``risk-on'' headline producing positive ES, NQ, BTC and negative CL (dollar strength), while a ``flight-to-safety'' headline produces the opposite pattern.
+
+\paragraph{F2: DSPy Integration for LLM Prompt Optimization.} Integrating the DSPy framework~\cite{dspy2024} would enable automatic prompt optimization for the DeepSeek scoring layer. If the LLM's sentiment scores show poor correlation with realized price moves, DSPy would iteratively refine the scoring prompt to improve predictive accuracy, addressing the reproducibility concern raised by~\citet{kirtac2025llmfinance} that different LLM prompts produce systematically different scores.
+
+\paragraph{F3: Tick-Level Price Calibration.} If a historical tick feed for ES futures becomes available, the calibration could use precise 1-minute, 15-minute, and 1-hour forward windows alongside the current 24-hour window. This would enable time-horizon-specific sentiment signals and help distinguish between short-term microstructural reactions and lasting macro impacts.
+
+\paragraph{F4: Cross-Cluster Spillover Tracking.} When a headline assigned to cluster $C_j$ produces a market reaction pattern that resembles the $\overline{\text{ES}}$ profile of a different cluster $C_k$, this signals a regime shift or narrative spillover. Tracking these cross-cluster similarity shifts could serve as an early-warning system for market narrative transitions.
+
+\paragraph{F5: Real-Time Conflict Monitoring.} The conflict detection mechanism (spread $> 0.6$ between signals) could be surfaced as a standalone analytical view, alerting when the three signals disagree---a pattern that often precedes volatile market moves or narrative-breaking events.
+
+\subsection*{Acknowledgments}
+
+The author thanks the open-source community behind FinBERT, the Loughran-McDonald financial lexicon, the DeepSeek API team, and the broader financial NLP ecosystem for making their research and tools publicly available. This work was conducted independently and is not affiliated with any of the compared frameworks or services.
+
+\subsection*{Data and Code Availability}
+
+Full source code, MySQL schema, and analysis scripts are available at the project website under the MIT license. The live sentiment gauge can be viewed at the project website.

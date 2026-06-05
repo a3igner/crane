@@ -1,0 +1,30 @@
+% ============================================================
+% Section 1: Introduction
+% ============================================================
+\section{Introduction}
+
+\subsection{Motivation}
+
+A breaking macroeconomic headline drops at 8:47 AM. Within 90 seconds, S\&P 500 E-mini futures (ES) move 0.4\%. The foundational question in algorithmic execution is not whether news moves markets---that reality is firmly established~\cite{fama1970efficient}---but whether an automated engine can read that text, contextualize it against the shifting structural regime, and emit an accurate directional signal before the price move completes, all while maintaining zero marginal computational cost.
+
+Dominant modern sentiment paradigms fall short under production constraints. Pretrained transformer models such as FinBERT~\cite{finbert2020} exhibit sharp structural blindness: they are static linguistic snapshots frozen at training time, blind to regime shifts unless expensively retrained or fine-tuned on fresh labeled datasets~\cite{cristescu2025finbert}. Large Language Model (LLM) scoring via proprietary APIs introduces exceptional text-parsing flexibility but adds prohibitive overhead: costing \$30--\$90 per million documents, compounding inference latencies to the 2-second range, and remaining fundamentally decoupled from real-time asset price feedback~\cite{kirtac2025llmfinance}. Meanwhile, commercial financial sentiment APIs are locked behind licensing fees that render them inaccessible to independent researchers and boutique quant firms. Crucially, none of these systems close the loop between their textual predictions and empirical market results.
+
+The central thesis of CRANE is that market sentiment is not a static, isolated linguistic property embedded within text. Rather, it is a dynamic, context-dependent function of the current market regime, the underlying asset class, and the historical price reactions to semantically similar past headlines. CRANE operationalizes this insight by maintaining a living statistical cluster map of headline semantics indexed directly against concurrent and forward realized price movements across five asset classes, updating its internal representations continuously without gradient descent or neural weight optimizations.
+
+\subsection{Our Contribution}
+
+This paper presents CRANE (Cluster-Reactive Adaptive News Ensemble), a hybrid news sentiment engine that addresses three fundamental challenges---cost, adaptability, and ground-truth calibration---simultaneously. Our system:
+
+\begin{itemize}
+    \item \textbf{Operates at zero marginal cost} --- the entire pipeline runs on a single CPU server at 10.0.0.44:3306, processing each news batch of 50 headlines in under 2 seconds, with no GPU, no model downloads, and no API fees beyond a fixed \$20/month data plan for price feeds. The system has been trained on over 430,000 headline--price pairings spanning two years of live market data.
+
+    \item \textbf{Learns continuously without retraining} --- the core innovation is an adaptive TF-IDF cluster learner that organizes headlines into semantic neighborhoods and tracks the \emph{realized average multi-asset price reaction} for each cluster across five assets (ES, NQ, CL, BTC, ETH). As market regimes shift, cluster centroids drift and their associated price reactions update automatically via an exponential moving average. No retraining, fine-tuning, or labeled data is needed.
+
+    \item \textbf{Calibrates against realized ground truth} --- every 6 hours, the system computes the Spearman rank correlation between each signal's predicted sentiment and the actual 24-hour forward price move that followed each headline. Ensemble weights are recalculated using a modified softmax with a diversity floor, shifting allocation toward whichever signal---lexicon, statistical cluster, or LLM---has best predicted actual moves in the recent 7-day window.
+
+    \item \textbf{Captures cross-asset signatures} --- each news item arrives with 22 simultaneous price snapshots spanning equity futures (ES, NQ), equity ETFs (SPY, IWM, DIA, NDX), commodities (CL), and cryptocurrencies (BTC, ETH). The statistical learner builds clusters that capture \emph{multi-asset reaction patterns}, where each cluster stores average 24h impacts for ES, NQ, CL, BTC, and ETH simultaneously, enabling cross-asset sentiment signatures.
+\end{itemize}
+
+\subsection{Scope and Roadmap}
+
+The remainder of this paper is organized as follows. Section~\ref{sec:related} reviews existing approaches to financial news sentiment, from lexicon-based methods through FinBERT to LLM-based systems, identifying the specific adaptability gap our approach fills. Section~\ref{sec:architecture} describes the system architecture, data pipeline with 22-field price snapshots, and MySQL schema spanning four tables. Section~\ref{sec:approach} details the three ensemble signals---financial lexicon with prospect-theory weighting, online TF-IDF cluster learner with multi-asset return buffers, and optional DeepSeek zero-shot scoring---along with the auto-calibration loop and regime detection. Section~\ref{sec:novelty} provides a structured comparison against FinBERT, GPT-4, FinLlama, VADER, and commercial APIs across cost, latency, accuracy, and adaptability dimensions. Section~\ref{sec:implementation} describes the live Hermes cron pipeline deployment and the interactive HTML sentiment gauge widget. Section~\ref{sec:conclusion} summarizes findings and discusses limitations and future work.
