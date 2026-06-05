@@ -6,7 +6,7 @@
   <a href="https://tradeflags.com"><img src="https://img.shields.io/badge/🌐-tradeflags.com-00ff88" alt="Tradeflags"></a>
   <a href="#"><img src="https://img.shields.io/badge/📺-YouTube_Tutorial-red" alt="YouTube Tutorial (coming soon)"></a>
   <a href="https://www.researchgate.net/publication/405708057_Hybrid_News_Sentiment_Engine_Real-Time_Market_Analysis_via_Adaptive_Ensemble_Learning_on_News-Price_Pairs"><img src="https://img.shields.io/badge/📄-ResearchGate-blue" alt="ResearchGate"></a>
-  <a href="https://arxiv.org/abs/2606.03457"><img src="https://img.shields.io/badge/📄-arXiv-cs.LG-red" alt="arXiv"></a>
+  <a href="https://arxiv.org/abs/2606.03457"><img src="https://img.shields.io/badge/arXiv-2606.03457-red" alt="arXiv"></a>
 </p>
 
 <h1 align="center">CRANE</h1>
